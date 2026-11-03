@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" role="img" aria-labelledby="t d">
+  <title id="t">Livessa</title>
+  <desc id="d">深い青緑の角丸の正方形に、右上がりの道と、その先の金色の丸</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#1d4a49"/>
+      <stop offset="1" stop-color="#123030"/>
+    </linearGradient>
+    <linearGradient id="gd" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f0cf8a"/>
+      <stop offset="1" stop-color="#cf9f4f"/>
+    </linearGradient>
+  </defs>
+  <rect width="1024" height="1024" rx="200" fill="url(#bg)"/>
+  <path d="M190 742 C 330 742 380 600 480 600 C 590 600 600 430 720 380" fill="none" stroke="#eef4f2" stroke-width="64" stroke-linecap="round"/>
+  <circle cx="770" cy="312" r="92" fill="url(#gd)"/>
+  <path d="M190 840 H 834" stroke="#eef4f2" stroke-opacity=".35" stroke-width="28" stroke-linecap="round"/>
+</svg>
