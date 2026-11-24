@@ -131,7 +131,7 @@
     var ym = ui.month, now = Store.nowYm(), ms = Store.months();
     if (Store.mode() !== 'real') v.appendChild(h('div', { class: 'sampleband' }, Store.hasSample() ? '見本の数字です（作り物）。まだカード会社のメールにはつながっていません。'
       : 'まだ受け口につないでいません。右上の歯車（設定）→「受け口」に、受け口の URL と合言葉を入れると、カード会社のメールから明細が入ります。'));
-    else if (!Store.data.tx.length) v.appendChild(h('div', { class: 'sampleband' }, 'まだ明細がありません。受け口がカード会社のメールを読むと、ここに並びます（15分ごと。設定の「いますぐメールを読む」でもすぐ読めます）。'));
+    else if (!Store.data.tx.length) v.appendChild(h('div', { class: 'sampleband' }, 'まだ明細がありません。受け口がカード会社のメールを読むと、ここに並びます（15分ごと。設定の「今すぐメールを読む」でもすぐ読めます）。'));
     v.appendChild(h('div', { class: 'monthbar' },
       h('button', { type: 'button', class: 'mbtn', 'aria-label': '前の月', disabled: ym <= ms[0], onclick: function () { ui.month = Store.addMonths(ym, -1); saveUi(); renderBook(); } }, '‹'),
       h('b', null, ymLabel(ym)),
@@ -144,7 +144,7 @@
         h('div', null, h('span', { class: 'lbl' }, '入ったお金'), h('b', { class: 'num plus' }, yen(s.inn))),
         h('div', null, h('span', { class: 'lbl' }, '残ったお金'),
           h('b', { class: 'num ' + (bal >= 0 ? 'plus' : 'minus') }, sgnYen(bal), h('span', { class: 'flag ' + (bal >= 0 ? 'good' : 'bad') }, bal >= 0 ? '黒字' : '赤字')))),
-      s.quick ? h('p', { class: 'note' }, '速報 ' + s.quick + '件をふくみます。確定の明細が来たら置きかわります。') : null,
+      s.quick ? h('p', { class: 'note' }, '速報 ' + s.quick + '件を含みます。確定の明細が来たら置きかわります。') : null,
       s.move ? h('p', { class: 'note' }, '口座どうしの移動・積立（' + yen(s.move) + '）は、使ったお金に数えていません。') : null));
 
     if (ym === now) checks(v);
@@ -241,7 +241,7 @@
       ]));
     }
     Store.totalsDue().forEach(function (x) {
-      list.push(card('💳', x.f.name + 'の' + mLabel(x.ym) + '分の請求が決まるころです。1件ずつのメールは来ないので、' + mLabel(x.ym) + '分の合計を1つ入れてください。', [
+      list.push(card('💳', x.f.name + 'の' + mLabel(x.ym) + '分の請求が決まる頃です。1件ずつのメールは来ないので、' + mLabel(x.ym) + '分の合計を1つ入れてください。', [
         h('button', { type: 'button', class: 'btn pri', onclick: function () { openAdd({ total: x.f, month: x.ym }); } }, '合計を入れる')
       ]));
     });
@@ -309,7 +309,7 @@
     }
     if (t.src === 'fixed') {
       var f = t.fixed ? Store.fixedById(t.fixed) : null;
-      body.push(h('p', { class: 'note' }, f ? '毎月決まったもの「' + f.name + '」から作った明細です。' : '毎月決まったものから作った明細です（もとは消してあります）。'));
+      body.push(h('p', { class: 'note' }, f ? '毎月決まったもの「' + f.name + '」から作った明細です。' : '毎月決まったものから作った明細です（元は消してあります）。'));
       body.push(h('div', { class: 'acts', style: 'display:flex;gap:8px;flex-wrap:wrap;margin-top:8px' },
         h('button', { type: 'button', class: 'btn', onclick: function () { fixAmount(t); } }, 'この月の額を直す'),
         t.fixed ? h('button', { type: 'button', class: 'btn dng', onclick: function () {
@@ -624,7 +624,7 @@
     openSheet(edit ? 'メールが来ないカードを直す' : 'メールが来ないカードを足す', [
       h('p', { class: 'note' }, '1件ずつの利用通知メールが来ないカードです。毎月、決めた日から「前の月の合計を入れてください」と家計簿に出します。明細の中身は分かりませんが、月の合計だけでも家計簿とライフプランに入ります。'),
       h('label', { class: 'field' }, h('span', null, '名前'), h('small', null, '★カード番号は書かない'), name),
-      h('label', { class: 'field' }, h('span', null, '請求が決まる日の目安'), h('small', null, 'カード会社から「請求が確定しました」の知らせが来るころ'), day),
+      h('label', { class: 'field' }, h('span', null, '請求が決まる日の目安'), h('small', null, 'カード会社から「請求が確定しました」の知らせが来る頃'), day),
       h('button', { type: 'button', class: 'btn pri wide', onclick: function () {
         if (!name.value.trim()) { toast('名前を入れてください'); return; }
         Store.saveFixed({ id: f.id, name: name.value.trim(), mode: 'total', day: +day.value });
@@ -735,7 +735,7 @@
     v.appendChild(h('div', { class: 'card diag' },
       h('div', null, h('span', null, '毎月の収支（賞与・特別費を12で割って入れる）'), h('b', { class: 'num ' + (bal >= 0 ? 'plus' : 'minus') }, sgnYen(bal), h('span', { class: 'flag ' + (bal >= 0 ? 'good' : 'bad') }, bal >= 0 ? '黒字' : '赤字'))),
       net !== null ? h('div', null, h('span', null, '純資産'), h('b', { class: 'num ' + (net >= 0 ? 'plus' : 'minus') }, man(Math.round(net)), h('span', { class: 'flag ' + (net >= 0 ? 'good' : 'bad') }, net >= 0 ? 'プラス' : 'マイナス'))) : null,
-      h('p', { class: 'note', style: 'margin:4px 0 0' }, good ? '毎月黒字で、純資産もプラスです。3 のできごとに進めます。'
+      h('p', { class: 'note', style: 'margin:4px 0 0' }, good ? '毎月黒字で、純資産もプラスです。3 の出来事に進めます。'
         : '赤字か、純資産がマイナスです。3 に進む前に、どこを直すかを考えます（お金の世界では、既に遭難している状態です）。')));
 
     // バランスシート
@@ -790,7 +790,7 @@
         h('div', { class: 'tags' }, tags),
         e.memo ? h('p', { class: 'note', style: 'margin:6px 0 0' }, e.memo) : null));
     });
-    v.appendChild(h('button', { type: 'button', class: 'btn pri wide', onclick: function () { openEvent(-1); } }, '＋ できごとを足す'));
+    v.appendChild(h('button', { type: 'button', class: 'btn pri wide', onclick: function () { openEvent(-1); } }, '＋ 出来事を足す'));
   }
 
   function openEvent(i) {
@@ -815,7 +815,7 @@
     sc.value = e.scenario || '';
     var memo = h('input', { type: 'text', value: e.memo, placeholder: '根拠や「概算」など' });
     var num = function (el) { return el.value.normalize('NFKC').trim().replace(/[−ー－]/g, '-'); };
-    openSheet(i >= 0 ? 'できごとを直す' : 'できごとを足す', [
+    openSheet(i >= 0 ? '出来事を直す' : '出来事を足す', [
       h('div', { class: 'field' }, h('span', null, 'いつ'), seg, h('div', { style: 'height:6px' }), when),
       h('label', { class: 'field' }, h('span', null, 'できごと'), name),
       h('label', { class: 'field' }, h('span', null, '分類'), cat),
@@ -826,7 +826,7 @@
       h('label', { class: 'field' }, h('span', null, 'シナリオ'), sc),
       h('label', { class: 'field' }, h('span', null, 'メモ'), memo),
       h('button', { type: 'button', class: 'btn pri wide', onclick: function () {
-        if (!name.value.trim()) { toast('できごとを入れてください'); return; }
+        if (!name.value.trim()) { toast('出来事を入れてください'); return; }
         if (!when.value) { toast('いつかを入れてください'); return; }
         var ne = { year: by === 'year' ? when.value : '', age: by === 'age' ? when.value : '', member: e.member, event: name.value.trim(), category: cat.value.trim(),
           one_time_cost: num(ot), income_change: num(ic), expense_change: num(ec), years: num(yrs), scenario: sc.value, memo: memo.value.trim() };
@@ -839,7 +839,7 @@
       } }, i >= 0 ? '直す' : '足す'),
       i >= 0 ? h('button', { type: 'button', class: 'btn dng wide', style: 'margin-top:8px', onclick: function () {
         p.events.splice(i, 1); Store.savePlan(); closeSheet(); toast('消しました'); renderPlan();
-      } }, 'このできごとを消す') : null
+      } }, 'この出来事を消す') : null
     ]);
   }
 
@@ -857,7 +857,7 @@
       var rows = Plan.simulate(plan, s);
       return { name: s, cls: 's' + (i + 1), rows: rows, sum: Plan.summarize(plan, rows) };
     });
-    v.appendChild(h('p', { class: 'note' }, '1〜3 をもとにした、毎年のお金の見通しです。生活費・できごとの費用は物価上昇率で、手取りは収入の上昇率で、毎年増えます（入れるのは今の値段）。'));
+    v.appendChild(h('p', { class: 'note' }, '1〜3 を元にした、毎年のお金の見通しです。生活費・出来事の費用は物価上昇率で、手取りは収入の上昇率で、毎年増えます（入れるのは今の値段）。'));
 
     // 要点（シナリオを横に並べて比べる）
     var cps = all[0].sum.checkpoints.map(function (c) { return c.age; });
@@ -917,8 +917,8 @@
     v.appendChild(h('p', { class: 'note' }, '色の付いた行が退職の年です。'));
 
     assumptions(v);
-    v.appendChild(h('p', { class: 'note' }, '税金・社会保険料の細かい計算はしない、簡易の計算です（もとにしたキットと同じ）。保険・税金・投資の判断は、FP などの専門家にも相談してください。'));
-    v.appendChild(h('p', { class: 'note' }, '計算は、もとにしたキットの Python と同じ答えが出ることを確かめてあります。'));
+    v.appendChild(h('p', { class: 'note' }, '税金・社会保険料の細かい計算はしない、簡易の計算です（元にしたキットと同じ）。保険・税金・投資の判断は、FP などの専門家にも相談してください。'));
+    v.appendChild(h('p', { class: 'note' }, '計算は、元にしたキットの Python と同じ答えが出ることを確かめてあります。'));
   }
 
   function assumptions(v, open) {
@@ -1033,8 +1033,8 @@
       Sync.scan().then(function (r) {
         toast('メールを読みました：新しい明細 ' + (r.added || 0) + '件' + (r.bad ? '・読めなかったメール ' + r.bad + '通' : ''));
         closeSheet(); render();
-      }).catch(function (e) { scanBtn.disabled = false; scanBtn.textContent = 'いますぐメールを読む'; toast(e.message || String(e)); });
-    } }, 'いますぐメールを読む');
+      }).catch(function (e) { scanBtn.disabled = false; scanBtn.textContent = '今すぐメールを読む'; toast(e.message || String(e)); });
+    } }, '今すぐメールを読む');
     return h('div', { class: 'card' }, h('b', null, '受け口'),
       h('dl', { class: 'kv' },
         h('dt', null, '様子'), h('dd', null, { ok: 'つながっています（同期済み）', busy: '送り合っています', pending: 'まだ送っていない直しが ' + st.pending + '件', error: 'つながりません：' + (st.message || ''), off: 'つないでいません' }[st.kind]),
@@ -1042,7 +1042,7 @@
         h('dt', null, '受け口の版'), h('dd', { class: old ? 'minus' : '' }, (Sync.version || '分かりません') + (old ? '（★コードが古いままです。デプロイし直してください）' : '')),
         h('dt', null, 'URL'), h('dd', { style: 'word-break:break-all' }, c.url.replace(/^(https:\/\/script\.google\.com\/macros\/s\/.{8}).*(\/exec)$/, '$1…$2'))),
       h('div', { class: 'acts', style: 'display:flex;gap:8px;flex-wrap:wrap' }, scanBtn,
-        h('button', { type: 'button', class: 'btn', onclick: function () { Sync.run(true).then(function (r) { toast(r && r.pulled ? r.pulled + '件を受け取りました' : '送り合いました'); render(); openSettings(); }).catch(function (e) { toast(e.message || String(e)); }); } }, 'いま送り合う'),
+        h('button', { type: 'button', class: 'btn', onclick: function () { Sync.run(true).then(function (r) { toast(r && r.pulled ? r.pulled + '件を受け取りました' : '送り合いました'); render(); openSettings(); }).catch(function (e) { toast(e.message || String(e)); }); } }, '今送り合う'),
         showPin),
       h('div', { class: 'sec' }, h('h2', null, '読んだメール')), mails,
       h('button', { type: 'button', class: 'btn dng wide', style: 'margin-top:12px', onclick: function () {
