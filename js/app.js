@@ -103,7 +103,7 @@
     var b = $('#badge');
     if (Store.mode() !== 'real') { b.textContent = Store.hasSample() ? '見本' : 'つないでいません'; b.className = 'badge'; b.title = 'まだカード会社のメールにはつながっていません'; return; }
     var st = Sync.state();
-    var txt = { ok: '同期ずみ', busy: '送り合っています…', pending: '送る ' + st.pending + '件', error: 'つながりません', off: 'つないでいません' }[st.kind];
+    var txt = { ok: '同期済み', busy: '送り合っています…', pending: '送る ' + st.pending + '件', error: 'つながりません', off: 'つないでいません' }[st.kind];
     b.textContent = txt; b.className = 'badge ' + st.kind; b.title = st.message || '';
   }
 
@@ -151,7 +151,7 @@
 
     // 分類ごと
     var bm = budgetMonthly();
-    v.appendChild(h('div', { class: 'sec' }, h('h2', null, '分類ごと'), h('small', null, bm.fromBook ? 'めやすは、ふだんの月（直近6か月の平均）' : 'めやすは、収支表の数字')));
+    v.appendChild(h('div', { class: 'sec' }, h('h2', null, '分類ごと'), h('small', null, bm.fromBook ? '目安は、普段の月（直近6か月の平均）' : '目安は、収支表の数字')));
     var cats = h('div', { class: 'card cats' });
     if (s.pending) {
       cats.appendChild(h('div', { class: 'catrow pend', role: 'button', tabindex: '0', onclick: function () { show('wait'); } },
@@ -166,9 +166,9 @@
       cats.appendChild(h('div', { class: 'catrow' + (over ? ' over' : '') },
         h('span', { class: 'nm' }, c), h('span', { class: 'am num' }, yen(spent)),
         h('div', { class: 'meter' }, h('i', { style: 'width:' + (bud ? Math.min(100, spent / bud * 100) : 100).toFixed(1) + '%' })),
-        h('span', { class: 'bud num' }, !bud ? 'めやすなし'
-          : over ? '⚠ めやす ' + yen(bud) + ' を ' + yen(spent - bud) + ' 超えています'
-          : 'めやす ' + yen(bud) + '・あと ' + yen(bud - spent))));
+        h('span', { class: 'bud num' }, !bud ? '目安なし'
+          : over ? '⚠ 目安 ' + yen(bud) + ' を ' + yen(spent - bud) + ' 超えています'
+          : '目安 ' + yen(bud) + '・あと ' + yen(bud - spent))));
     });
     if (!rows && !s.pending) cats.appendChild(h('p', { class: 'empty' }, 'この月の明細はありません'));
     v.appendChild(cats);
@@ -236,7 +236,7 @@
     }
     var pend = Store.pendingAll().length;
     if (pend) {
-      list.push(card('🏷', '分類待ちが ' + pend + '件あります。店名が書かれていない明細や、決まりごとに無い店です。', [
+      list.push(card('🏷', '分類待ちが ' + pend + '件あります。店名が書かれていない明細や、決まり事に無い店です。', [
         h('button', { type: 'button', class: 'btn pri', onclick: function () { show('wait'); } }, '分ける')
       ]));
     }
@@ -305,7 +305,7 @@
       }
     }
     if (t.by === 'mine' && t.src !== 'hand' && t.src !== 'total') {
-      body.push(h('button', { type: 'button', class: 'btn wide', style: 'margin-top:14px', onclick: function () { Store.clearCat(t.id); closeSheet(); toast('自分で分けたのをやめました'); render(); } }, '自分で分けたのをやめる（決まりごとに任せる）'));
+      body.push(h('button', { type: 'button', class: 'btn wide', style: 'margin-top:14px', onclick: function () { Store.clearCat(t.id); closeSheet(); toast('自分で分けたのをやめました'); render(); } }, '自分で分けたのをやめる（決まり事に任せる）'));
     }
     if (t.src === 'fixed') {
       var f = t.fixed ? Store.fixedById(t.fixed) : null;
@@ -367,7 +367,7 @@
     v.appendChild(h('p', { class: 'note' }, '店の名前から分類が決まらなかった明細です。分類を選ぶと、ここから消えます。'));
     if (!list.length) { v.appendChild(h('div', { class: 'card empty' }, '分類待ちはありません')); return; }
     if (list.some(function (t) { return !shopText(t); })) {
-      v.appendChild(h('div', { class: 'hint card' }, '「店名なし」は、利用通知に店名が書かれていなかった分です（カードによっては「Mastercard加盟店」「UCS加盟店利用」としか出ないことがある）。時刻と金額で思い出して分けてください。Apple Pay でタッチした支払いなら、iPhone のショートカット「取引」で店名が埋まるようにします（はじめの一歩の3）。'));
+      v.appendChild(h('div', { class: 'hint card' }, '「店名なし」は、利用通知に店名が書かれていなかった分です（カードによっては「Mastercard加盟店」「UCS加盟店利用」としか出ないことがある）。時刻と金額で思い出して分けてください。Apple Pay でタッチした支払いなら、iPhone のショートカット「取引」で店名が埋まるようにします（初めの一歩の3）。'));
     }
     list.forEach(function (t) {
       var shop = shopText(t), learn = null;
@@ -376,7 +376,7 @@
           h('span', { class: 'wmeta' }, dLabel(t.d) + (t.t ? ' ' + t.t : '') + '・' + payLabel(t) + '・' + SRCS[t.src]),
           h('span', { class: 'wamt num' }, comma(t.amt) + '円')),
         h('div', { class: 'wshop' + (shop ? '' : ' none') }, shop || '店名なし'),
-        shop ? h('div', { class: 'hint' }, '決まりごとに無い店です。分けると、次からは自動で分かれます。') : null,
+        shop ? h('div', { class: 'hint' }, '決まり事に無い店です。分けると、次からは自動で分かれます。') : null,
         catChips('', function (cat) {
           var added = Store.setCat(t.id, cat, learn ? learn.checked : false);
           toast(cat + 'にしました' + (added ? '。「' + added.k + '」は次から自動で' + cat + 'に入ります' : ''));
@@ -391,7 +391,7 @@
   }
 
   /* ================= 残高 ================= */
-  var KINDS = [['cash', '現預金'], ['inv', '投資'], ['other', 'その他の資産（売れる値段のめやす）'], ['debt', '借入（残り）']];
+  var KINDS = [['cash', '現預金'], ['inv', '投資'], ['other', 'その他の資産（売れる値段の目安）'], ['debt', '借入（残り）']];
   function renderBal() {
     var v = $('#view-bal'); v.innerHTML = '';
     var D = Store.data, now = Store.nowYm(), keys = Store.snapKeys();
@@ -624,7 +624,7 @@
     openSheet(edit ? 'メールが来ないカードを直す' : 'メールが来ないカードを足す', [
       h('p', { class: 'note' }, '1件ずつの利用通知メールが来ないカードです。毎月、決めた日から「前の月の合計を入れてください」と家計簿に出します。明細の中身は分かりませんが、月の合計だけでも家計簿とライフプランに入ります。'),
       h('label', { class: 'field' }, h('span', null, '名前'), h('small', null, '★カード番号は書かない'), name),
-      h('label', { class: 'field' }, h('span', null, '請求が決まる日のめやす'), h('small', null, 'カード会社から「請求が確定しました」の知らせが来るころ'), day),
+      h('label', { class: 'field' }, h('span', null, '請求が決まる日の目安'), h('small', null, 'カード会社から「請求が確定しました」の知らせが来るころ'), day),
       h('button', { type: 'button', class: 'btn pri wide', onclick: function () {
         if (!name.value.trim()) { toast('名前を入れてください'); return; }
         Store.saveFixed({ id: f.id, name: name.value.trim(), mode: 'total', day: +day.value });
@@ -736,7 +736,7 @@
       h('div', null, h('span', null, '毎月の収支（賞与・特別費を12で割って入れる）'), h('b', { class: 'num ' + (bal >= 0 ? 'plus' : 'minus') }, sgnYen(bal), h('span', { class: 'flag ' + (bal >= 0 ? 'good' : 'bad') }, bal >= 0 ? '黒字' : '赤字'))),
       net !== null ? h('div', null, h('span', null, '純資産'), h('b', { class: 'num ' + (net >= 0 ? 'plus' : 'minus') }, man(Math.round(net)), h('span', { class: 'flag ' + (net >= 0 ? 'good' : 'bad') }, net >= 0 ? 'プラス' : 'マイナス'))) : null,
       h('p', { class: 'note', style: 'margin:4px 0 0' }, good ? '毎月黒字で、純資産もプラスです。3 のできごとに進めます。'
-        : '赤字か、純資産がマイナスです。3 に進む前に、どこを直すかを考えます（お金の世界では、すでに遭難している状態です）。')));
+        : '赤字か、純資産がマイナスです。3 に進む前に、どこを直すかを考えます（お金の世界では、既に遭難している状態です）。')));
 
     // バランスシート
     var bs = raw.bs, snap = Store.latestSnap();
@@ -757,7 +757,7 @@
       rowsOf('その他の資産（計算では増えも減りもしない）', bs.assets.others, function (x) { return man(x.amount); }),
       rowsOf('借入', bs.liabilities, function (x) { return man(x.balance) + '（年 ' + man(x.annual_repayment) + ' 返す' + (x.included_in_budget ? '・家計簿に入っている' : '') + '）'; }),
       h('tr', { class: 'tot' }, h('td', null, '資産 − 借入 ＝ 純資産'), h('td', null, man(Math.round((totalA - totalD) * 10) / 10)))));
-    if (!p.useBal) bsCard.appendChild(h('p', { class: 'note' }, 'いまはキットの見本の数字です。手で直す画面は、あとで作ります。'));
+    if (!p.useBal) bsCard.appendChild(h('p', { class: 'note' }, '今はキットの見本の数字です。手で直す画面は、後で作ります。'));
     v.appendChild(bsCard);
   }
   function seedBudget(p, a) {   // 家計簿の数字を切ったとき、いまの平均から始める
@@ -857,7 +857,7 @@
       var rows = Plan.simulate(plan, s);
       return { name: s, cls: 's' + (i + 1), rows: rows, sum: Plan.summarize(plan, rows) };
     });
-    v.appendChild(h('p', { class: 'note' }, '1〜3 をもとにした、毎年のお金の見通しです。生活費・できごとの費用は物価上昇率で、手取りは収入の上昇率で、毎年ふえます（入れるのは今の値段）。'));
+    v.appendChild(h('p', { class: 'note' }, '1〜3 をもとにした、毎年のお金の見通しです。生活費・できごとの費用は物価上昇率で、手取りは収入の上昇率で、毎年増えます（入れるのは今の値段）。'));
 
     // 要点（シナリオを横に並べて比べる）
     var cps = all[0].sum.checkpoints.map(function (c) { return c.age; });
@@ -874,7 +874,7 @@
     v.appendChild(h('div', { class: 'card' }, h('table', { class: 'btable cmp' },
       h('tr', null, h('th', null, '要点'), all.map(function (x) { return h('th', null, all.length > 1 ? h('i', { class: 'sw ' + x.cls }) : null, x.name); })),
       rowsK.map(function (r) { return h('tr', null, h('td', null, r[0]), all.map(r[1])); }))));
-    if (plan.scenarios.length > 3) v.appendChild(h('p', { class: 'note' }, 'シナリオが4つ以上あるので、はじめの3つだけを出しています。'));
+    if (plan.scenarios.length > 3) v.appendChild(h('p', { class: 'note' }, 'シナリオが4つ以上あるので、初めの3つだけを出しています。'));
 
     // グラフ
     var years = all[0].rows.map(function (r) { return r.year; });
@@ -944,7 +944,7 @@
         pct('物価上昇率', 'inflation'), pct('手取りの上昇率', 'income_growth'),
         pct('年金の上昇率', 'pension_growth'), pct('投資の想定利回り', 'investment_return'),
         pct('預金金利', 'cash_interest')),
-      h('p', { class: 'note' }, 'シナリオ：' + a.scenarios.join('・') + '（名前を変える・増やす画面は、あとで作ります）')));
+      h('p', { class: 'note' }, 'シナリオ：' + a.scenarios.join('・') + '（名前を変える・増やす画面は、後で作ります）')));
   }
 
   /* ================= 設定 ================= */
@@ -953,16 +953,16 @@
     var mine = Store.rules().filter(function (r) { return r.by === 'mine'; });
     var built = Store.rules().filter(function (r) { return r.by !== 'mine'; });
     openSheet('設定', [
-      real || !Store.hasSample() ? null : h('div', { class: 'card' }, h('b', null, '見本'), h('p', { class: 'note' }, 'いまの数字はすべて作り物です。分けたり入れたりしたものは、この端末の中にだけ残ります。下の「受け口」でつなぐと、本物の明細に切り替わります（見本とは混ざりません）。'),
+      real || !Store.hasSample() ? null : h('div', { class: 'card' }, h('b', null, '見本'), h('p', { class: 'note' }, '今の数字は全て作り物です。分けたり入れたりしたものは、この端末の中にだけ残ります。下の「受け口」でつなぐと、本物の明細に切り替わります（見本とは混ざりません）。'),
         h('button', { type: 'button', class: 'btn', onclick: function () { if (confirm('見本の数字を作り直します。分けたり入れたりしたものは消えます。よいですか？')) { Store.reset(); closeSheet(); toast('見本を作り直しました'); ui.month = Store.nowYm(); saveUi(); render(); } } }, '見本に戻す')),
       real ? connCard() : connectForm(),
       h('div', { class: 'card' }, h('b', null, '読むもの'), h('ul', { class: 'list' }, Object.keys(PAYS).map(function (k) {
         return h('li', null, h('span', null, PAYS[k].label, h('small', null, PAYS[k].note)));
-      })), h('p', { class: 'note' }, 'iPhone のショートカット「取引」（Apple Pay のタッチで店名を埋める）は、まだです（はじめの一歩の3）。')),
+      })), h('p', { class: 'note' }, 'iPhone のショートカット「取引」（Apple Pay のタッチで店名を埋める）は、まだです（初めの一歩の3）。')),
       h('div', { class: 'card' }, h('b', null, '毎月決まったもの'),
         h('p', { class: 'note' }, D.fixed.length ? D.fixed.map(function (f) { return f.name; }).join('・') : 'まだありません。給料・家賃・積立など、銀行から入る・出るお金を入れます。'),
         h('button', { type: 'button', class: 'btn', onclick: openFixedList }, D.fixed.length ? '見る・直す・足す' : '入れる')),
-      h('div', { class: 'card' }, h('b', null, '分類の決まりごと'),
+      h('div', { class: 'card' }, h('b', null, '分類の決まり事'),
         h('p', { class: 'note' }, '上から順に見て、最初に当たったもので決めます。自分で決めたものが、用意したものより先です。'),
         mine.length ? h('ul', { class: 'list' }, mine.map(function (r) {
           return h('li', null, h('span', null, shopText({ shop: r.k }) + ' → ' + r.c, h('small', null, '自分で決めた')),
@@ -1001,7 +1001,7 @@
       });
     } }, 'つなぐ');
     return h('div', { class: 'card' }, h('b', null, '受け口'),
-      h('p', { class: 'note' }, 'まだつないでいません。個人の Google アカウントに受け口（Apps Script）を置くと、カード会社のメールを15分ごとに読んで、明細が自動で入ります。作りかたは「受け口の作りかた.md」。'),
+      h('p', { class: 'note' }, 'まだつないでいません。個人の Google アカウントに受け口（Apps Script）を置くと、カード会社のメールを15分ごとに読んで、明細が自動で入ります。作り方は「受け口の作りかた.md」。'),
       h('label', { class: 'field' }, h('span', null, '受け口の URL'), url),
       h('label', { class: 'field' }, h('span', null, '合言葉'), h('small', null, '★人に見せない。この端末の中にだけ残ります'), pin),
       go);
@@ -1021,7 +1021,7 @@
       Object.keys(r.sources).forEach(function (k) {
         var x = r.sources[k];
         ul.appendChild(h('li', null, h('span', null, x.name, h('small', null, 'メール ' + x.read + '通 → 明細 ' + x.items + '件')),
-          x.bad ? h('span', { class: 'minus' }, '読めなかった ' + x.bad + '通') : h('span', { class: 'plus' }, 'すべて読めた')));
+          x.bad ? h('span', { class: 'minus' }, '読めなかった ' + x.bad + '通') : h('span', { class: 'plus' }, '全て読めた')));
       });
       mails.appendChild(ul);
       var bad = r.bad || [];
@@ -1037,7 +1037,7 @@
     } }, 'いますぐメールを読む');
     return h('div', { class: 'card' }, h('b', null, '受け口'),
       h('dl', { class: 'kv' },
-        h('dt', null, '様子'), h('dd', null, { ok: 'つながっています（同期ずみ）', busy: '送り合っています', pending: 'まだ送っていない直しが ' + st.pending + '件', error: 'つながりません：' + (st.message || ''), off: 'つないでいません' }[st.kind]),
+        h('dt', null, '様子'), h('dd', null, { ok: 'つながっています（同期済み）', busy: '送り合っています', pending: 'まだ送っていない直しが ' + st.pending + '件', error: 'つながりません：' + (st.message || ''), off: 'つないでいません' }[st.kind]),
         h('dt', null, 'メールを読んだ'), h('dd', null, Sync.lastScan ? new Date(Sync.lastScan).toLocaleString('ja-JP') : 'まだ／分かりません'),
         h('dt', null, '受け口の版'), h('dd', { class: old ? 'minus' : '' }, (Sync.version || '分かりません') + (old ? '（★コードが古いままです。デプロイし直してください）' : '')),
         h('dt', null, 'URL'), h('dd', { style: 'word-break:break-all' }, c.url.replace(/^(https:\/\/script\.google\.com\/macros\/s\/.{8}).*(\/exec)$/, '$1…$2'))),

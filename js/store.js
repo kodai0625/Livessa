@@ -251,7 +251,7 @@
       var n = norm(t.shop), list = rules();
       for (var i = 0; i < list.length; i++) {
         if (n.indexOf(norm(list[i].k)) >= 0) {
-          return { cat: list[i].c, why: (list[i].by === 'mine' ? '自分で決めた決まりごと' : '決まりごと') + '「' + list[i].k + '」', rule: list[i] };
+          return { cat: list[i].c, why: (list[i].by === 'mine' ? '自分で決めた決まり事' : '決まり事') + '「' + list[i].k + '」', rule: list[i] };
         }
       }
     }

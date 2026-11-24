@@ -9,7 +9,7 @@
 
   function explain(obj) {
     if (obj.error === 'bad_pin') return '合言葉が違います';
-    if (obj.error === 'locked') return '合言葉を何度もまちがえたので、10分止まっています';
+    if (obj.error === 'locked') return '合言葉を何度も間違えたので、10分止まっています';
     if (obj.error === 'not_setup') return '受け口の用意（setup）がまだです';
     if (obj.error === 'busy') return '受け口がメールを読んでいる最中です。少し待ってください';
     return obj.error || '断られました';
